@@ -11,7 +11,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.googlecode.gwtphonegap</groupId>
 	<artifactId>gwtphonegap</artifactId>
-	<version>4.0.2-SNAPSHOT</version>
+	<version>4.0.2</version>
 	<packaging>jar</packaging>
 	<name>GWT PhoneGap</name>
 
@@ -43,7 +43,7 @@
 		<connection>scm:git:https://github.com/Brainfuse/gwtphonegap</connection>
 		<developerConnection>scm:git:git@github.com:Brainfuse/gwtphonegap.git</developerConnection>
 
-	  <tag>HEAD</tag>
+	  <tag>4.0.2</tag>
   </scm>
 
 
