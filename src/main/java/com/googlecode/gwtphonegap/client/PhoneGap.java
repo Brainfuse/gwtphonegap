@@ -182,4 +182,6 @@ public interface PhoneGap {
 
   public Globalization getGlobalization();
 
+PhoneGap register(String id, PhoneGapPlugin classToRegister);
+
 }

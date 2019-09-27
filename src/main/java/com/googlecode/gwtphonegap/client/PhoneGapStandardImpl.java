@@ -36,6 +36,7 @@ import com.googlecode.gwtphonegap.client.log.PhoneGapLogStandardImpl;
 import com.googlecode.gwtphonegap.client.media.MediaModule;
 import com.googlecode.gwtphonegap.client.notification.Notification;
 import com.googlecode.gwtphonegap.client.plugins.PhoneGapPlugin;
+import com.googlecode.gwtphonegap.client.plugins.PhoneGapPlugin2;
 import com.googlecode.gwtphonegap.client.splashscreen.SplashScreen;
 
 import java.util.HashMap;
@@ -61,7 +62,8 @@ public class PhoneGapStandardImpl implements PhoneGap {
   private SplashScreen splashScreen;
   private InAppBrowser inAppBrowser;
 
-  private Map<String, PhoneGapPlugin> plugins = new HashMap<String, PhoneGapPlugin>();
+  protected Map<String, PhoneGapPlugin> plugins = new HashMap<String, PhoneGapPlugin>();
+  protected Map<String, PhoneGapPlugin> pluginRegistrations = new HashMap<>();
 
   private boolean hasHandlers = false;
   private EventBus handlerManager = new SimpleEventBus();
@@ -188,6 +190,12 @@ public class PhoneGapStandardImpl implements PhoneGap {
     }
     handlerManager.fireEvent(new PhoneGapAvailableEvent());
   }
+  
+	@Override
+	public PhoneGap register(String id, PhoneGapPlugin plugin) {
+		pluginRegistrations.put(id, plugin);
+		return this;
+	}
 
   @Override
   public Contacts getContacts() {
@@ -197,9 +205,26 @@ public class PhoneGapStandardImpl implements PhoneGap {
     return contacts;
   }
 
-  @Override
-  public PhoneGapPlugin getPluginById(String id) {
-    return plugins.get(id);
+	@Override
+	public PhoneGapPlugin getPluginById(String id) {
+		PhoneGapPlugin phoneGapPlugin = plugins.get(id);
+		if (phoneGapPlugin == null) {
+			final PhoneGapPlugin registration = pluginRegistrations
+					.get(id);
+			if (registration != null) {
+				phoneGapPlugin = registration;
+				if (phoneGapPlugin instanceof PhoneGapPlugin2)
+					((PhoneGapPlugin2) phoneGapPlugin).initialize(this);
+				else {
+					phoneGapPlugin.initialize();
+					plugins.put(id, phoneGapPlugin);
+				}
+				pluginRegistrations.remove(id);
+			}
+
+		}
+    	
+	return phoneGapPlugin;
   }
 
   @Override
