@@ -11,12 +11,12 @@
 	 -->
 	<property-provider name="phonegap.env"><![CDATA[
   	{
-	    if (window.hasOwnProperty('cordova')) { 
+       var ua = window.navigator.userAgent.toLowerCase();
+       if(ua.indexOf('brainfuseapp') != -1){
 	    	return 'yes';	
 	    }else {
 		    return 'no';
 	    }
-	   
   	}
 ]]></property-provider>
 
